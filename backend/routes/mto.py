@@ -23,7 +23,21 @@ CSV_COLUMNS = [
     "confidence", "remarks",
 ]
 
-
+@router.get("/mto/{job_id}/image")
+def get_job_image(job_id: str):
+    """Serve the processed PNG image for the frontend preview."""
+    if not job_store.job_exists(job_id):
+        raise HTTPException(status_code=404, detail="Job not found")
+    
+    import tempfile
+    from pathlib import Path
+    from fastapi.responses import FileResponse
+    
+    img_path = Path(tempfile.gettempdir()) / "mto_uploads" / f"{job_id}.png"
+    if not img_path.exists():
+        raise HTTPException(status_code=404, detail="Image not found")
+        
+    return FileResponse(img_path, media_type="image/png")
 def _get_result_or_404(job_id: str) -> MTOResult:
     job = job_store.get_job(job_id)
     if not job:

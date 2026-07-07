@@ -2,12 +2,20 @@
 Isometric MTO Generator — FastAPI Backend
 Entry point: uvicorn main:app --reload
 """
+import logging
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
 from routes import upload, mto, health
 from core.exceptions import MissingAPIKeyError, CorruptImageError, FileTooLargeError
+
+# Configure logging so pipeline steps are visible in console
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
+)
 
 app = FastAPI(
     title="Isometric MTO Generator API",
