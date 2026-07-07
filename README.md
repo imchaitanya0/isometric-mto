@@ -13,7 +13,7 @@
 - [Tech Stack](#tech-stack)
 - [Architecture](#architecture)
 - [Prerequisites](#prerequisites)
-- [Installation & Setup](#installation--setup)
+- [Installation &amp; Setup](#installation--setup)
 - [Running the App](#running-the-app)
 - [Usage Guide](#usage-guide)
 - [API Reference](#api-reference)
@@ -27,33 +27,34 @@
 
 ## Overview
 
-The **Isometric MTO Generator** automates the tedious, error-prone task of manually reading piping isometric drawings and counting materials. 
+The **Isometric MTO Generator** automates the tedious, error-prone task of manually reading piping isometric drawings and counting materials.
 
 A piping engineer traditionally spends hours counting elbows, flanges, pipe lengths, and deriving bolt sets from a single isometric drawing. This tool uses **Google Gemini Vision AI** in a two-pass extraction pipeline to do the same job in under 10 seconds.
 
-**Input:** PNG / JPG / PDF of a piping isometric drawing  
+**Input:** PNG / JPG / PDF of a piping isometric drawing
 **Output:** Structured MTO table with drawing metadata, quantities, material specs, bounding boxes, and a confidence score — downloadable as CSV or Excel.
 
 ---
 
 ## ✨ Features
 
-| Feature | Description |
-|---|---|
-| 🤖 **AI Extraction (Pass A)** | Full-image Gemini Vision scan for pipes, fittings, flanges, valves, and elbows with bounding boxes |
-| 📋 **BOM Recognition (Pass B)** | Dedicated crop of the BOM table region with structured row extraction |
-| 🔗 **Smart Reconciliation** | Fuzzy-match merge of Pass A + Pass B results; flags quantity mismatches |
-| ⚙️ **Auto-Derived Consumables** | Gaskets and bolt sets are automatically computed from flange/valve counts |
-| 🖼️ **Interactive SVG Overlay** | Hover over any extracted item to highlight its bounding box on the drawing image |
-| 📥 **CSV & Excel Export** | One-click download of the full MTO in CSV or `.xlsx` format |
-| ⚡ **Transparent Rate Limiting** | Clear, user-friendly messages when AI quota is reached — no silent failures |
-| 🐋 **Docker Support** | Full `docker-compose` setup for production deployment |
+| Feature                                | Description                                                                                        |
+| -------------------------------------- | -------------------------------------------------------------------------------------------------- |
+| 🤖**AI Extraction (Pass A)**     | Full-image Gemini Vision scan for pipes, fittings, flanges, valves, and elbows with bounding boxes |
+| 📋**BOM Recognition (Pass B)**   | Dedicated crop of the BOM table region with structured row extraction                              |
+| 🔗**Smart Reconciliation**       | Fuzzy-match merge of Pass A + Pass B results; flags quantity mismatches                            |
+| ⚙️**Auto-Derived Consumables** | Gaskets and bolt sets are automatically computed from flange/valve counts                          |
+| 🖼️**Interactive SVG Overlay**  | Hover over any extracted item to highlight its bounding box on the drawing image                   |
+| 📥**CSV & Excel Export**         | One-click download of the full MTO in CSV or`.xlsx` format                                       |
+| ⚡**Transparent Rate Limiting**  | Clear, user-friendly messages when AI quota is reached — no silent failures                       |
+| 🐋**Docker Support**             | Full`docker-compose` setup for production deployment                                             |
 
 ---
 
 ## 🛠️ Tech Stack
 
 ### Backend
+
 - **Python 3.12** + **FastAPI** — async REST API
 - **Google Gemini Vision API** (`gemini-3.1-flash-lite`) — two-pass AI extraction
 - **Pillow** + **pdf2image** + **Poppler** — PDF/image preprocessing
@@ -62,6 +63,7 @@ A piping engineer traditionally spends hours counting elbows, flanges, pipe leng
 - **Pytest** — 27 unit + integration tests
 
 ### Frontend
+
 - **Next.js 14** (App Router) + **TypeScript**
 - **Vanilla CSS** — custom design system, glassmorphism UI
 - **SVG Overlay** — real-time bounding box visualization
@@ -104,6 +106,7 @@ User Upload (PNG/JPG/PDF)
 ```
 
 **Job Flow:**
+
 1. `POST /api/upload` → file saved to disk, background job created, `job_id` returned immediately
 2. Frontend polls `GET /api/mto/{job_id}` every 2 seconds
 3. Pipeline runs in background: preprocess → OCR → Gemini Pass A → Gemini Pass B → Reconcile
@@ -114,6 +117,7 @@ User Upload (PNG/JPG/PDF)
 ## 📦 Prerequisites
 
 ### Required
+
 - **Node.js 18+** and **npm**
 - **Python 3.12+**
 - **Poppler** (for PDF-to-image conversion)
@@ -144,8 +148,8 @@ sudo apt-get install -y poppler-utils tesseract-ocr
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/pathnovo.git
-cd pathnovo/isometric-mto
+git clone https://github.com/Imchaitanya0/isometric-mto.git
+cd isometric-mto
 ```
 
 ### 2. Backend Setup
@@ -200,7 +204,7 @@ source venv/bin/activate
 uvicorn main:app --reload --port 8000
 ```
 
-The API will be live at `http://localhost:8000`  
+The API will be live at `http://localhost:8000`
 Interactive API docs: `http://localhost:8000/docs`
 
 ### Start the Frontend
@@ -226,13 +230,13 @@ The app will open at `http://localhost:3000`
 
 ### Rate Limit Guidance (Free Tier)
 
-The Google Gemini free tier allows **5 requests per minute** and **50 requests per day** per model. Each drawing upload uses **2 API calls** (Pass A + Pass B).
+The Google Gemini free tier allows **5 requests per minute** and **varied requests per day** per model(**example : gemini 3.1 flash lite will be having 500 requests per day**). Each drawing upload uses **2 API calls** (Pass A + Pass B).
 
-| Error Message | Meaning | Action |
-|---|---|---|
-| "Please wait 1 minute…" | Minute quota hit | Wait 60 seconds, try again |
-| "Please try again tomorrow…" | Daily quota exhausted | Wait until midnight PT for reset |
-| "The AI model timed out…" | Server overload (no quota used) | Retry immediately |
+| Error Message                 | Meaning                         | Action                           |
+| ----------------------------- | ------------------------------- | -------------------------------- |
+| "Please wait 1 minute…"      | Minute quota hit                | Wait 60 seconds, try again       |
+| "Please try again tomorrow…" | Daily quota exhausted           | Wait until midnight PT for reset |
+| "The AI model timed out…"    | Server overload (no quota used) | Retry immediately                |
 
 ---
 
@@ -247,6 +251,7 @@ Upload a drawing file and start the extraction pipeline.
 **Request:** `multipart/form-data` with field `file` (PNG/JPG/PDF, max 20MB)
 
 **Response:**
+
 ```json
 {
   "job_id": "550e8400-e29b-41d4-a716-446655440000",
@@ -262,6 +267,7 @@ Upload a drawing file and start the extraction pipeline.
 Poll the job status and retrieve the result when complete.
 
 **Response (completed):**
+
 ```json
 {
   "job_id": "550e8400...",
@@ -352,13 +358,13 @@ This shows you exactly what the AI returned — unfiltered by the reconciliation
 
 For each drawing, manually verify:
 
-| What to Check | How |
-|---|---|
-| **Elbows count** | Count every direction change (corner) in the pipe run on the drawing |
-| **Tees count** | Count every T-junction or branch connection |
-| **Flange count** | Count the flange symbols (double vertical lines) |
+| What to Check             | How                                                                                   |
+| ------------------------- | ------------------------------------------------------------------------------------- |
+| **Elbows count**    | Count every direction change (corner) in the pipe run on the drawing                  |
+| **Tees count**      | Count every T-junction or branch connection                                           |
+| **Flange count**    | Count the flange symbols (double vertical lines)                                      |
 | **Gaskets & Bolts** | Should equal the number of flanged joints (automatically derived, 100% code-computed) |
-| **Pipe length** | Sum all dimension callouts on the drawing |
+| **Pipe length**     | Sum all dimension callouts on the drawing                                             |
 
 ### Method 3: Download & Compare in Excel
 
@@ -376,11 +382,11 @@ python -m pytest tests/ -v
 
 **Current test suite:** 27 tests across 3 files
 
-| Test File | Coverage |
-|---|---|
-| `test_schema.py` | Pydantic model validation, boundary conditions |
+| Test File                  | Coverage                                                      |
+| -------------------------- | ------------------------------------------------------------- |
+| `test_schema.py`         | Pydantic model validation, boundary conditions                |
 | `test_reconciliation.py` | Fuzzy merge logic, consumable derivation, full reconcile flow |
-| `test_mock_pipeline.py` | Upload endpoint, health check, polling, mock pipeline |
+| `test_mock_pipeline.py`  | Upload endpoint, health check, polling, mock pipeline         |
 
 ---
 
@@ -389,6 +395,7 @@ python -m pytest tests/ -v
 For production deployment, use the included Docker Compose setup:
 
 ### Prerequisites
+
 - Docker Desktop installed and running
 
 ### Steps
@@ -466,14 +473,14 @@ isometric-mto/
 
 ## ⚠️ Known Limitations
 
-| Limitation | Details |
-|---|---|
-| **Pipe length accuracy** | AI estimates lengths from dimension annotations. Expect ±10–15% tolerance. |
-| **Free tier quota** | 5 requests/minute, 50 requests/day per model on the free tier |
-| **Complex multi-page PDFs** | Only the first page is processed |
-| **Hand-drawn drawings** | OCR and AI accuracy drops significantly on hand-sketched isos |
-| **Pass B BOM extraction** | Drawings without a tabular BOM in the bottom-right corner will return 0 BOM rows (Pass A items are still extracted correctly) |
-| **In-memory job store** | Jobs are lost if the backend restarts; no persistence to disk |
+| Limitation                        | Details                                                                                                                       |
+| --------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| **Pipe length accuracy**    | AI estimates lengths from dimension annotations. Expect ±10–15% tolerance.                                                  |
+| **Free tier quota**         | 5 requests/minute, 50 requests/day per model on the free tier                                                                 |
+| **Complex multi-page PDFs** | Only the first page is processed                                                                                              |
+| **Hand-drawn drawings**     | OCR and AI accuracy drops significantly on hand-sketched isos                                                                 |
+| **Pass B BOM extraction**   | Drawings without a tabular BOM in the bottom-right corner will return 0 BOM rows (Pass A items are still extracted correctly) |
+| **In-memory job store**     | Jobs are lost if the backend restarts; no persistence to disk                                                                 |
 
 ---
 
