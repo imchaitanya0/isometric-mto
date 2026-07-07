@@ -1,0 +1,22 @@
+fastapi==0.115.5
+uvicorn[standard]==0.32.1
+python-multipart==0.0.12
+pydantic==2.10.3
+pydantic-settings==2.7.0
+python-dotenv==1.0.1
+
+# Image processing
+Pillow==11.0.0
+pdf2image==1.17.0
+pytesseract==0.3.13
+
+# AI
+google-generativeai==0.8.3
+
+# Spreadsheet export (backend CSV streaming)
+openpyxl==3.1.5
+
+# Testing
+pytest==8.3.4
+pytest-asyncio==0.24.0
+httpx==0.28.1

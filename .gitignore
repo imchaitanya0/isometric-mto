@@ -1,0 +1,45 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+venv/
+.venv/
+env/
+*.egg
+
+# Environment variables - NEVER commit these
+.env
+backend/.env
+frontend/.env.local
+
+# Node / Next.js
+node_modules/
+.next/
+out/
+dist/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+
+# Test / coverage
+.pytest_cache/
+.coverage
+htmlcov/
+*.log
+
+# Uploads (temp storage)
+backend/uploads/
+
+# Model weights / large files
+*.h5
+*.pkl
+*.model
